@@ -1,0 +1,132 @@
+/////////////////////////////////// Articulation Point //////// JAVA //////////////////
+//////////////Munim Mowsum //////MIT 22_ ID 201116 ////////////////////////////////////
+
+import java.util.*;
+
+public class AP {
+	static int m;
+	static int ver;
+	static int edg;
+	static int time;
+	static int u;
+	static int source;
+	static int destination;
+	static final int white=0,grey=1,black=2;
+	static int prev[]=new int[100];
+	static int color[]=new int[100];
+	static int d[]=new int[100];
+	static int f[]=new int[100];
+	static int low[]=new int[100];
+	static int s;
+	public LinkedList<Integer>list[];
+	static boolean ap[] = new boolean[50];
+
+	   
+@SuppressWarnings({ "unchecked", "static-access" })
+public AP(int ver) {
+		   this.ver = ver;
+		   list = new LinkedList[ver];
+		   for (int i = 0; i <ver; i++) {
+		      list[i] = new LinkedList<>();
+		      }
+		}
+	   public void addEdge(int source,int destination) {
+		   list[source].addFirst(destination);
+		   list[destination].addFirst(source);
+	}
+		
+
+	public void traverse(int s){
+		
+		for(u=0;u<ver;u++) {
+	        	  color[u]=white;
+	        	  prev[u]=-1;
+		          f[u]=Integer.MAX_VALUE;
+		          d[u]=Integer.MAX_VALUE;
+		          ap[u]=false;
+		}
+	    time=0;
+	    u=s;                      
+	    m=0;
+	    while(u<ver && u>-1) {
+	         if(color[u]==white)
+	        	 DFS_Visit(u);
+	             u=u+1;
+	             if(u==ver||u>ver)
+	            	 u=0;
+	           	 m=m+1;
+	           	 if(m>=ver)
+	           		 break;
+	           	 }
+	  for (int i=0;i<ver;i++) { 
+        if (ap[i]==true) 
+            System.out.print(i+" ");
+	    }
+	}
+
+	public void DFS_Visit(int u) {
+		
+		int child=0;
+
+		color[u]=grey;
+		time=time+1;
+		d[u]=time;
+		low[u]=time;
+		
+		Iterator<Integer>ver=list[u].listIterator();
+		while(ver.hasNext()) {
+			int v=ver.next();
+			if(color[v]==white) {
+				child++;
+				prev[v]=u;
+				DFS_Visit(v);
+				low[u]=Math.min(low[u],low[v]);
+				
+				if(prev[u]>-1 && child>1)
+				     ap[u] = true; 
+			    if(prev[u]!=-1 && low[v] >= d[u]) 
+                     ap[u] = true; 
+			}
+			else if(v!=prev[u])
+				low[u]=Math.min(low[u],d[v]);
+			
+		}
+		
+
+		color[u]=black;
+		time=time+1;
+		f[u]=time;
+		
+	}	
+
+
+
+	public static void main(String[] args) {
+		System.out.println("How many Vertex : ");
+		Scanner in1=new Scanner(System.in);
+		ver=in1.nextInt();
+		
+		System.out.println("How many edge you want to enter : ");
+		Scanner number=new Scanner(System.in);
+		edg=number.nextInt();
+		
+		
+		AP graph=new AP(ver);
+		for(int e=0;e<edg;e++) {
+	        System.out.print("Enter edge : ");
+	        Scanner sc=new Scanner(System.in);
+	        int source=sc.nextInt();
+	        int destination=sc.nextInt();
+	       
+	        graph.addEdge(source, destination);
+
+	        }
+		System.out.println("Enter the source Vertex : ");
+		Scanner sr=new Scanner(System.in);
+		s=sr.nextInt();
+		
+	
+	System.out.println("\nArticulation points : ");
+	graph.traverse(s);
+	}
+}

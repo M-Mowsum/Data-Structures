@@ -1,0 +1,103 @@
+///////////////////////////////// DFS Code  ///////////////////////////////
+//////Munim Mowsum ///// MIT 22 ///// roll 201116////////////////////
+
+import java.util.*;
+
+public class DFS {
+	
+	static int ver;
+	static int edg;
+	static int time;
+	static int u;
+	static int source;
+	static int destination;
+	static final int white=0,grey=1,black=2;
+	static int prev[]=new int[100];
+	static int color[]=new int[100];
+	static int d[]=new int[100];
+	static int f[]=new int[100];
+	
+	static LinkedList<Integer>list[];
+	   
+	   @SuppressWarnings({ "unchecked", "static-access" })
+public DFS(int ver) {
+	   this.ver = ver;
+	   list = new LinkedList[ver];
+	   for (int i = 0; i <ver; i++) {
+	      list[i] = new LinkedList<>();
+	      }
+	}
+	   
+	public void addEdge(int source,int destination) {
+		   list[source].addFirst(destination);
+	}
+		
+	@SuppressWarnings("unused")
+	public void traverse(){
+		
+		for(u=0;u<ver;u++) {
+	        	  color[u]=white;
+	        	  prev[u]=-1;
+		          f[u]=Integer.MAX_VALUE;
+		          d[u]=Integer.MAX_VALUE;
+		}
+	    time=0;
+	    int u=0;
+	    
+	    while(u<ver) {
+	         if(color[u]==white)
+	        	DFS_Visit(u);
+	            u=u+1;
+	    }
+	}
+	public void DFS_Visit(int u) {
+		
+		color[u]=grey;
+		time=time+1;
+		d[u]=time;
+		
+		System.out.print(u+" ");
+		
+		Iterator<Integer>ver=list[u].listIterator();
+		while(ver.hasNext()) {
+			int v=ver.next();
+                        	
+			if(color[v]==white) {
+				prev[v]=u;
+				DFS_Visit(v);
+			}
+			
+		}
+		color[u]=black;
+		time=time+1;
+		f[u]=time;
+		
+	}
+	
+	@SuppressWarnings("resource")
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("Enter Vertex no : ");
+		Scanner in1=new Scanner(System.in);
+		ver=in1.nextInt();
+		
+		System.out.println("How many edge you want to enter : ");
+		Scanner number=new Scanner(System.in);
+		edg=number.nextInt();
+		
+		DFS graph=new DFS(ver);
+		
+		for(int e=0;e<edg;e++) {
+		        System.out.print("Enter edge : ");
+		        Scanner sc=new Scanner(System.in);
+		        int source=sc.nextInt();
+		        int destination=sc.nextInt();
+		       
+		        graph.addEdge(source, destination);
+
+		        }
+		System.out.print("Final Visited Order : ");
+		graph.traverse();
+		      
+			}
+		}

@@ -1,0 +1,94 @@
+//////////////////////////// MST-PRIM ///////////////////////////
+///////////////Munim Mowsum ///////// Roll 201116 ///////////////
+
+import java.util.*;
+import java.io.*;
+
+public class Prim {
+    static int V;
+    static int[][] Matrix;
+    static int[]parent;
+    static int i;
+    int minkey(Boolean[] Q,int[]key) {
+    	int min=Integer.MAX_VALUE; 
+    	int min_index=-1;
+
+    	int m=0;
+	    for(i=0;i<V;i++) {
+	         if(Q[i]==false && key[i]<min) {
+	        	 min=key[i];
+	        	 min_index=i;
+	    }
+    	
+	    }return min_index;
+    }
+
+
+    
+    void mstPrim(int[][]Matrix) {
+    	Boolean[] Q=new Boolean[V];
+    	int[]key=new int[V];
+    	parent=new int[V];
+    	int total=0;
+    	
+    	for(int i=0;i<V;i++) {
+    		Q[i]=false;
+    		key[i]=Integer.MAX_VALUE;
+    	}
+
+    	key[0]=0;
+    	parent[0]=-1;
+      
+	     for(int x=0;x<V-1;x++){
+
+	     		int k1=minkey(Q,key);
+                Q[k1]=true;
+	     		
+	    		for (int j = 0; j < V; j++)
+	    		     if (Matrix[k1][j] != 0 && Q[j] == false && Matrix[k1][j] < key[j]) {
+	                         parent[j] = k1;
+	                         key[j] = Matrix[k1][j];
+	            }
+                 
+	           	 }
+         for (int z = 1; z < V; z++) {
+            System.out.println(parent[z] + " - " + z + "\t" + Matrix[z][parent[z]]);
+            total=total+Matrix[z][parent[z]];
+        }
+         System.out.println("Total weight : "+total);
+         
+    		}
+    	
+    
+    
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		System.out.println("How many vertex = ");
+		Scanner sc=new Scanner(System.in);
+		V=sc.nextInt();
+
+	    Matrix = new int[V][V];
+	    
+	    Prim P=new Prim();
+	    
+	    File file=new File("/Users/munim/Desktop/input.txt" );
+	 	Scanner scan=new Scanner(file);
+	 		
+	 	for(int i=0;i<V;i++) {
+	 		for(int j=0;j<V;j++) {
+	 			Matrix[i][j]=scan.nextInt();				
+	 		}
+	 	}
+	 	System.out.println("Our Matrix (Vertex to vertex weight) :");
+	 	for (int i = 0; i < Matrix.length; i++) {
+	 	    for (int j = 0; j < Matrix[i].length; j++) {
+	 	       System.out.print(Matrix[i][j] + " ");
+	 	        }
+	 	       System.out.println();
+	 	 }
+	 	System.out.println("\nSo MST-PRIM : ");
+	 	System.out.println("Edge \tWeight");
+	 	P.mstPrim(Matrix);
+      }
+
+}

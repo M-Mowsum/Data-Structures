@@ -1,0 +1,162 @@
+import java.util.*;
+
+public class Scc {
+	static int m;
+	static int ver;
+	static int edg;
+	static int time;
+	static int u;
+	static int source;
+	static int destination;
+	static final int white=0,grey=1,black=2;
+	static int prev[]=new int[100];
+	static int color[]=new int[100];
+	static int d[]=new int[100];
+	static int f[]=new int[100];
+	static int s;
+	public LinkedList<Integer>list[];
+	public static Queue<Integer> st=new LinkedList<>();
+	public static Stack<Integer>fn=new Stack<>();
+	static int p;
+	static String arr[]=new String[50];
+	   @SuppressWarnings({ "unchecked", "static-access" })
+	   
+public Scc(int ver) {
+		   this.ver = ver;
+		   list = new LinkedList[ver];
+		   for (int i = 0; i <ver; i++) {
+		      list[i] = new LinkedList<>();
+		      }
+		}
+	   public void addEdge(int source,int destination) {
+		   list[source].addFirst(destination);
+	}
+		
+	@SuppressWarnings("unused")
+	public void traverse(int s){
+		
+		for(u=0;u<ver;u++) {
+	        	  color[u]=white;
+	        	  prev[u]=-1;
+		          f[u]=Integer.MAX_VALUE;
+		          d[u]=Integer.MAX_VALUE;
+		}
+	    time=0;
+	    u=s;                      
+	    m=0;
+	    while(u<ver && u>-1) {
+	         if(color[u]==white)
+	        	 DFS_Visit(u);
+	             u=u+1;
+	             if(u==ver||u>ver)
+	            	 u=0;
+	           	 m=m+1;
+	           	 if(m>=ver)
+	           		 break;
+	           	 }
+	    
+	}
+	@SuppressWarnings("unused")
+    public void trav(int p){
+		time=0;
+	    u=p;   
+	    m=0;
+	    if(color[u]==white)
+        	DFS_Visit(u);
+	        	 }
+	public void DFS_Visit(int u) {
+		
+		color[u]=grey;
+		time=time+1;
+		d[u]=time;
+		
+		System.out.print(u+" ");
+		arr[u]="visited";
+		
+		Iterator<Integer>ver=list[u].listIterator();
+		while(ver.hasNext()) {
+			int v=ver.next();
+			if(color[v]==white) {
+				prev[v]=u;
+				DFS_Visit(v);
+			}
+			
+		}
+		
+		st.add(u);
+		color[u]=black;
+		time=time+1;
+		f[u]=time;
+		
+	}
+	Scc getTranspose() {
+		Scc g=new Scc(ver);
+		for(int k=0;k<ver;k++)
+		{
+			Iterator<Integer>i=list[k].listIterator();
+			while(i.hasNext())
+				g.list[i.next()].add(k);
+			}
+		return g;
+	}
+	void dfsTranspose() {
+		Scc tr=getTranspose();
+		for(u=0;u<ver;u++) {
+      	          color[u]=white;
+      	          prev[u]=-1;
+	          f[u]=Integer.MAX_VALUE;
+	          d[u]=Integer.MAX_VALUE;
+	     }
+		for(int i=0;i<ver;i++) {
+		   
+		   if(arr[p]!="visited") {
+			   System.out.println("\n");
+			   tr.trav(p);
+		}
+		   if(fn.size()!=0)
+			   p=fn.pop();
+		   else
+			   break;
+		      }
+      }
+	public static void main(String[] args) {
+		System.out.println("How many Vertex : ");
+		Scanner in1=new Scanner(System.in);
+		ver=in1.nextInt();
+		
+		System.out.println("How many edge you want to enter : ");
+		Scanner number=new Scanner(System.in);
+		edg=number.nextInt();
+		
+		
+		Scc graph=new Scc(ver);
+		for(int e=0;e<edg;e++) {
+	        System.out.print("Enter edge : ");
+	        Scanner sc=new Scanner(System.in);
+	        int source=sc.nextInt();
+	        int destination=sc.nextInt();
+	       
+	        graph.addEdge(source, destination);
+
+	        }
+		System.out.println("Enter the source Vertex : ");
+		Scanner sr=new Scanner(System.in);
+		s=sr.nextInt();
+		
+	System.out.print("DFS : ");
+	graph.traverse(s);
+	
+	for(int x=0;x<ver;x++)
+	{
+		int c =st.remove();
+		fn.add(c);
+	}
+	Arrays.fill(arr,null);
+	System.out.println("\n");
+	
+	p=fn.pop();
+	System.out.print("SCC : ");
+	graph.dfsTranspose();
+	
+    }
+}

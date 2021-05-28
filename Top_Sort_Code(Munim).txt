@@ -1,0 +1,121 @@
+////////////////////////////Topological Sorting Using DFS (Java Code)///////////////////////////////
+////////////MIT 22 Batch//////////////Munim Mowsum////////////////Roll 201116//////////////////////
+
+
+import java.util.*;
+
+public class TopSort {
+	static int m;
+	static int ver;
+	static int edg;
+	static int time;
+	static int u;
+	static int source;
+	static int destination;
+	static final int white=0,grey=1,black=2;
+	static int prev[]=new int[100];
+	static int color[]=new int[100];
+	static int d[]=new int[100];
+	static int f[]=new int[100];
+	public static int s;
+	
+	
+	
+	static LinkedList<Integer>list[];
+	public static LinkedList<Integer>tSort=new LinkedList<>();
+	   
+	   @SuppressWarnings({ "unchecked", "static-access" })
+	   
+public TopSort(int ver) {
+		   this.ver = ver;
+		   list = new LinkedList[ver];
+		   for (int i = 0; i <ver; i++) {
+		      list[i] = new LinkedList<>();
+		      }
+		}
+	   public void addEdge(int source,int destination) {
+		   list[source].addFirst(destination);
+	}
+		
+	@SuppressWarnings("unused")
+	public void traverse(int s){
+		
+		for(u=0;u<ver;u++) {
+	        	  color[u]=white;
+	        	  prev[u]=-1;
+		          f[u]=Integer.MAX_VALUE;
+		          d[u]=Integer.MAX_VALUE;
+		}
+	    time=0;
+	    u=s;                      
+	    m=0;
+	    while(u<ver && u>-1) {
+	         if(color[u]==white)
+	        	 DFS_Visit(u);
+	             u=u+1;
+	             if(u==ver||u>ver)
+	            	 u=0;
+	           	 m=m+1;
+	           	 if(m>=ver)
+	           		 break;
+	           	 }
+	    
+	}
+	public void DFS_Visit(int u) {
+		this.u=u;
+		color[u]=grey;
+		time=time+1;
+		d[u]=time;
+		
+		Iterator<Integer>ver=list[u].listIterator();
+		while(ver.hasNext()) {
+			int v=ver.next();
+			if(color[v]==white) {
+				prev[v]=u;
+				DFS_Visit(v);
+			}
+			
+		}
+		color[u]=black;
+		time=time+1;
+		f[u]=time;
+		tSort.addFirst(u);
+	}@SuppressWarnings("resource")
+
+	public static void main(String[] args) {
+		System.out.println("How many Vertex : ");
+		Scanner in1=new Scanner(System.in);
+		ver=in1.nextInt();
+		
+		System.out.println("How many edge you want to enter : ");
+		Scanner number=new Scanner(System.in);
+		edg=number.nextInt();
+		
+		TopSort graph=new TopSort(ver);
+
+		for(int e=0;e<edg;e++) {
+	            System.out.print("Enter edge : ");
+	            Scanner sc=new Scanner(System.in);
+	            int source=sc.nextInt();
+	            int destination=sc.nextInt();
+	       
+	            graph.addEdge(source, destination);
+
+	        }
+		System.out.println("Enter the source Vertex : ");
+		Scanner sr=new Scanner(System.in);
+		s=sr.nextInt();
+		
+	graph.traverse(s);
+	
+	System.out.println("\n");
+	System.out.println("Topological Sorting Order: ");
+	
+	Iterator<Integer>iterator=tSort.iterator();
+	while(iterator.hasNext())
+		System.out.print(iterator.next()+" ");
+		}
+
+	}
+
+
